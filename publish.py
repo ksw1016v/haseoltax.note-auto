@@ -108,7 +108,12 @@ def post_reel(folder):
     import caption_check
     caption_check.warn_only(folder / "ep.json")
     base = os.environ["IMAGE_BASE"].rstrip("/")
-    extra = {"cover_url": f"{rel}/cover.jpg"} if (folder / "cover.jpg").exists() else {"thumb_offset": str(ep.get("thumb_ms", 1500))}
+    if ep.get("cover_url"):
+        extra = {"cover_url": ep["cover_url"]}  # 표지가 저장소 밖 공개 주소에 있을 때 (video_url 과 함께 사용)
+    elif (folder / "cover.jpg").exists():
+        extra = {"cover_url": f"{rel}/cover.jpg"}
+    else:
+        extra = {"thumb_offset": str(ep.get("thumb_ms", 1500))}
     if os.environ.get("DRY_RUN"):
         print("DRY RUN", ep.get("video_url") or f"{base}/{rel}/reel.mp4", ep["caption"][:80], sep="\n")
         return
