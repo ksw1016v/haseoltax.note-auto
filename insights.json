@@ -1,10 +1,10 @@
 {
- "fetched_at": "2026-11-16 15:22:26 UTC",
+ "fetched_at": "2026-11-16 15:26:28 UTC",
  "account": {
   "id": "17841480826121317",
   "followers_count": 0,
   "follows_count": 0,
-  "media_count": 1,
+  "media_count": 0,
   "username": "haesoltax.note"
  },
  "account_daily": {
@@ -37,7 +37,7 @@
     "title": "프로필 방문",
     "description": "사람들이 회원님의 프로필을 방문한 횟수.",
     "total_value": {
-     "value": 0
+     "value": 1
     }
    },
    {
@@ -57,7 +57,7 @@
     "title": "참여한 계정",
     "description": "광고를 포함하여 회원님의 콘텐츠에 반응을 보인 계정 수. 콘텐츠에는 게시물, 스토리, 릴스, 동영상 및 라이브 방송이 포함되며, 반응에는 좋아요, 저장, 댓글, 공유 또는 답장 등의 활동이 포함됩니다. 이 지표는 추산치이며 개발 중입니다.",
     "total_value": {
-     "value": 0
+     "value": 2
     }
    },
    {
@@ -92,22 +92,5 @@
    }
   ]
  },
- "media": [
-  {
-   "id": "18109523140968229",
-   "media_type": "VIDEO",
-   "media_product_type": "REELS",
-   "timestamp": "2026-11-16T15:01:11+0000",
-   "like_count": 2,
-   "comments_count": 0,
-   "permalink": "https://www.instagram.com/reel/DfzoMzOCb3J/",
-   "title": "옆집이랑 매출이 똑같은데, 세금은 5배 차이? 🧾",
-   "reach": 0,
-   "saved": 0,
-   "shares": 0,
-   "total_interactions": 2,
-   "views": 3,
-   "ig_reels_avg_watch_time": 0
-  }
- ]
+ "media": []
 }
