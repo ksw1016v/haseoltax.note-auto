@@ -1,0 +1,56 @@
+name: dm
+
+# 댓글 키워드 → 자동 대댓글 + DM. DM이 걸린 편을 올리면 시작해서 5분마다 확인,
+# 약 5시간 50분 돌고 스스로 다시 시작하며 마지막 편을 올린 뒤 3일까지 이어감
+on:
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "1=시험(최근 게시물 전체, 한 번만, TEST_EP 필요) / 0=평소"
+        default: "0"
+      test_ep:
+        description: "시험할 편 폴더 (예: reels/01)"
+        default: ""
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency: dm
+
+jobs:
+  dm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 358
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 댓글 확인 반복(5분 간격)
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          TEST: ${{ inputs.test }}
+          TEST_EP: ${{ inputs.test_ep }}
+        run: |
+          git config user.name "haesol-bot"
+          git config user.email "actions@users.noreply.github.com"
+          save() { if ! git diff --quiet state.json; then git add state.json; git commit -qm "dm"; for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done; fi; }
+          git pull -q origin main
+          if [ "$TEST" = "1" ]; then python3 dm_bot.py; save; exit 0; fi
+          end=$(( $(date +%s) + 350*60 ))
+          while [ $(date +%s) -lt $end ]; do
+            git pull -q --rebase origin main || true
+            if [ "$(python3 dm_active.py)" != "1" ]; then echo "3일 안에 올린 DM 편이 없어 종료"; exit 0; fi
+            python3 dm_bot.py || echo "::warning::이번 확인 실패, 5분 뒤 다시"
+            save
+            sleep 300
+          done
+          echo "RESTART=1" >> "$GITHUB_ENV"
+      - name: 다음 6시간 이어가기
+        if: env.RESTART == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git pull -q origin main
+          if [ "$(python3 dm_active.py)" = "1" ]; then gh workflow run dm.yml -R ${{ github.repository }} -f test=0; fi
