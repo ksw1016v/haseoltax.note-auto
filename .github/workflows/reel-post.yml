@@ -9,6 +9,10 @@ on:
     - cron: "57 11 * * 1,3,5"
     - cron: "37 12 * * 1,3,5"
   workflow_dispatch:
+    inputs:
+      force:
+        description: "1=오늘 이미 올렸어도 게시(재업로드용)"
+        default: "0"
 
 permissions:
   contents: write
@@ -30,7 +34,7 @@ jobs:
         id: guard
         run: |
           git pull -q origin main
-          python3 guard.py >> "$GITHUB_OUTPUT"
+          if [ "${{ inputs.force }}" = "1" ]; then echo "skip=0" >> "$GITHUB_OUTPUT"; else python3 guard.py >> "$GITHUB_OUTPUT"; fi
 
       - name: 다음 편
         if: steps.guard.outputs.skip != '1'
