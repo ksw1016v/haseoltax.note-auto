@@ -26,6 +26,7 @@ else:
     G = "https://graph.facebook.com/v23.0"
     me = get(G, "me", fields="id,name")
     print("토큰 주인:", me.get("name"), me.get("error", {}).get("message", ""))
+    print("accounts:", get(G, "me/accounts", fields="name").get("error", {}).get("message", "ok"))
     pages = get(G, "me/accounts", fields="name,instagram_business_account{id,username,followers_count}", limit=50)
     for pg in pages.get("data", []):
         ig = pg.get("instagram_business_account")
@@ -35,7 +36,24 @@ else:
         r = get(G, path, fields="id,username", limit=50)
         for a in r.get("data", []):
             found.append((a.get("username"), a.get("id")))
-    d = get(G, "debug_token", input_token=tok).get("data", {})
+    for path, f in (("me/businesses", "id,name"), ("me/assigned_business_asset_groups", "id,name")):
+        r = get(G, path, fields=f, limit=50)
+        print(path, [x.get("name") for x in r.get("data", [])], r.get("error", {}).get("message", "")[:120])
+        if path == "me/businesses":
+            for b in r.get("data", []):
+                for edge in ("owned_instagram_accounts", "instagram_accounts", "client_instagram_accounts"):
+                    rr = get(G, f"{b['id']}/{edge}", fields="id,username", limit=50)
+                    print(" ", b.get("name"), edge, [(a.get("username"), a.get("id")) for a in rr.get("data", [])], rr.get("error", {}).get("message", "")[:100])
+                    for a in rr.get("data", []):
+                        found.append((a.get("username"), a.get("id")))
+    gi = get("https://graph.instagram.com/v23.0", "me", fields="user_id,username")
+    print("graph.instagram.com/me:", gi.get("username"), gi.get("user_id"), gi.get("error", {}).get("message", "")[:100])
+    if gi.get("user_id"):
+        found.append((gi.get("username"), gi["user_id"]))
+    raw = get(G, "debug_token", input_token=tok)
+    if "error" in raw:
+        print("debug_token 오류:", raw["error"].get("message", "")[:120])
+    d = raw.get("data", {})
     print("권한:", sorted(s for s in d.get("scopes", []) if "instagram" in s or "pages" in s or "business" in s))
     for g in d.get("granular_scopes", []):
         if "instagram" in g.get("scope", ""):
