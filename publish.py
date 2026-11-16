@@ -1,7 +1,7 @@
 """대기열(reels/NN/)에서 다음 편을 골라 인스타그램 릴스로 게시한다.
 
 편 폴더 reels/NN/
-  reel.mp4   1080x1920 릴스 영상
+  reel.mp4   1080x1920 릴스 영상 (또는 ep.json 의 video_url 에 공개 주소)
   cover.jpg  (선택) 미리보기 표지
   ep.json    {"no": 1, "title": "...", "caption": "...", "dm": {...}(선택)}
 
@@ -39,8 +39,11 @@ def save_state(st):
 def next_reel():
     done = set(load_state().get("published", []))
     for d in sorted((ROOT / "reels").iterdir() if (ROOT / "reels").exists() else []):
-        if d.is_dir() and d.name not in done and (d / "reel.mp4").exists() and (d / "ep.json").exists():
-            if json.loads((d / "ep.json").read_text(encoding="utf-8")).get("hold"):
+        if d.is_dir() and d.name not in done and (d / "ep.json").exists():
+            ep = json.loads((d / "ep.json").read_text(encoding="utf-8"))
+            if not ((d / "reel.mp4").exists() or ep.get("video_url")):
+                continue
+            if ep.get("hold"):
                 continue  # 보류 중인 편은 건너뜀
             return d
     return None
@@ -66,8 +69,10 @@ def raw_base(base):
     return f"https://raw.githubusercontent.com/{repo}/{sha}"
 
 
-def create_media(base, rel, **params):
+def create_media(base, rel, video_url=None, **params):
     """컨테이너 생성. 인스타가 파일을 못 받아 오면(9004 등) 잠시 뒤 재시도 → GitHub raw 주소로 대체."""
+    if video_url:  # 영상이 저장소 밖(Higgsfield 등 공개 주소)에 있을 때
+        return call("POST", f"{IG_USER_ID}/media", video_url=video_url, **params)["id"]
     last = None
     for i, b in enumerate(t for t in (base, base, raw_base(base)) if t):
         if i:
@@ -105,13 +110,13 @@ def post_reel(folder):
     base = os.environ["IMAGE_BASE"].rstrip("/")
     extra = {"cover_url": f"{rel}/cover.jpg"} if (folder / "cover.jpg").exists() else {"thumb_offset": str(ep.get("thumb_ms", 1500))}
     if os.environ.get("DRY_RUN"):
-        print("DRY RUN", f"{base}/{rel}/reel.mp4", ep["caption"][:80], sep="\n")
+        print("DRY RUN", ep.get("video_url") or f"{base}/{rel}/reel.mp4", ep["caption"][:80], sep="\n")
         return
     if not IG_USER_ID:
         raise SystemExit("IG_USER_ID 가 비어 있어요 (config.json 의 ig_user_id)")
     print("계정:", call("GET", IG_USER_ID, fields="username").get("username"))
     for attempt in range(3):  # CDN이 방금 올린 영상을 아직 못 줄 때가 있어 1분 간격 3번
-        cid = create_media(base, f"{rel}/reel.mp4", media_type="REELS", caption=ep["caption"], share_to_feed="true", **extra)
+        cid = create_media(base, f"{rel}/reel.mp4", video_url=ep.get("video_url"), media_type="REELS", caption=ep["caption"], share_to_feed="true", **extra)
         try:
             wait_ready(cid)
             break
