@@ -1,10 +1,10 @@
 {
- "fetched_at": "2026-11-16 15:26:28 UTC",
+ "fetched_at": "2026-11-16 15:29:16 UTC",
  "account": {
   "id": "17841480826121317",
   "followers_count": 0,
   "follows_count": 0,
-  "media_count": 0,
+  "media_count": 1,
   "username": "haesoltax.note"
  },
  "account_daily": {
@@ -92,5 +92,22 @@
    }
   ]
  },
- "media": []
+ "media": [
+  {
+   "id": "18102730814641806",
+   "media_type": "VIDEO",
+   "media_product_type": "REELS",
+   "timestamp": "2026-11-16T15:28:42+0000",
+   "like_count": 1,
+   "comments_count": 0,
+   "permalink": "https://www.instagram.com/reel/DfzrWCVlYIA/",
+   "title": "옆집이랑 매출이 똑같은데, 세금은 5배 차이? 🧾",
+   "reach": 0,
+   "saved": 0,
+   "shares": 0,
+   "total_interactions": 1,
+   "views": 0,
+   "ig_reels_avg_watch_time": 0
+  }
+ ]
 }
