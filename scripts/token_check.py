@@ -62,6 +62,12 @@ else:
                 a = get(G, tid, fields="id,username,followers_count")
                 if a.get("username"):
                     found.append((a["username"], a["id"]))
+cfg = json.load(open("config.json", encoding="utf-8")).get("ig_user_id")
+if cfg:
+    a = get("https://graph.facebook.com/v23.0", cfg, fields="id,username,followers_count,media_count")
+    print("config.json 계정 읽기:", a.get("username"), a.get("followers_count"), a.get("error", {}).get("message", ""))
+    if a.get("username"):
+        found.append((a["username"], a["id"]))
 seen = set()
 for u, i in found:
     if (u, i) not in seen:
