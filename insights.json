@@ -1,5 +1,5 @@
 {
- "fetched_at": "2026-11-24 02:21:24 UTC",
+ "fetched_at": "2026-11-24 23:57:12 UTC",
  "account": {
   "id": "17841480826121317",
   "followers_count": 101,
@@ -16,11 +16,11 @@
     "values": [
      {
       "value": 0,
-      "end_time": "2026-11-22T08:00:00+0000"
+      "end_time": "2026-11-23T08:00:00+0000"
      },
      {
-      "value": 0,
-      "end_time": "2026-11-23T08:00:00+0000"
+      "value": 1,
+      "end_time": "2026-11-24T08:00:00+0000"
      }
     ],
     "title": "도달",
@@ -32,12 +32,12 @@
     "period": "day",
     "values": [
      {
-      "value": 3,
-      "end_time": "2026-11-22T08:00:00+0000"
+      "value": 1,
+      "end_time": "2026-11-23T08:00:00+0000"
      },
      {
       "value": 0,
-      "end_time": "2026-11-23T08:00:00+0000"
+      "end_time": "2026-11-24T08:00:00+0000"
      }
     ],
     "title": "팔로워 수",
@@ -54,7 +54,7 @@
     "title": "프로필 방문",
     "description": "사람들이 회원님의 프로필을 방문한 횟수.",
     "total_value": {
-     "value": 4
+     "value": 2
     }
    },
    {
@@ -94,7 +94,7 @@
     "title": "조회수",
     "description": "콘텐츠가 재생되거나 표시된 횟수. 콘텐츠에는 릴스, 게시물, 스토리가 포함됩니다.",
     "total_value": {
-     "value": 0
+     "value": 1
     }
    },
    {
@@ -104,7 +104,7 @@
     "title": "도달한 계정",
     "description": "광고를 포함하여 회원님의 콘텐츠를 1회 이상 조회한 고유 계정 수. 콘텐츠에는 게시물, 스토리, 릴스, 동영상 및 라이브 방송이 포함됩니다. 도달은 같은 계정에서 콘텐츠를 여러 번 본 횟수까지 집계하는 노출과는 다른 개념입니다. 이 지표는 추산치이며 개발 중입니다.",
     "total_value": {
-     "value": 0
+     "value": 1
     }
    }
   ]
@@ -119,12 +119,12 @@
    "comments_count": 0,
    "permalink": "https://www.instagram.com/reel/Df4FwLxiGKt/",
    "title": "오늘 하루, 나는 세금을 몇 번이나 냈을까요? 🧾",
-   "reach": 161,
+   "reach": 162,
    "saved": 0,
    "shares": 0,
    "total_interactions": 6,
-   "views": 199,
-   "ig_reels_avg_watch_time": 15111
+   "views": 200,
+   "ig_reels_avg_watch_time": 15041
   }
  ]
 }
